@@ -2,6 +2,7 @@ using Content.Server.Administration.Logs;
 using Content.Server.Cargo.Systems;
 using Content.Server.Storage.Components;
 using Content.Shared.Database;
+using Content.Shared.EntityTable;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction.Events;
 using Robust.Shared.Audio;
@@ -20,6 +21,7 @@ namespace Content.Server.Storage.EntitySystems
         [Dependency] private readonly SharedHandsSystem _hands = default!;
         [Dependency] private readonly PricingSystem _pricing = default!;
         [Dependency] private readonly SharedAudioSystem _audio = default!;
+        [Dependency] private readonly EntityTableSystem _entityTable = default!;
 
         public override void Initialize()
         {
@@ -29,9 +31,9 @@ namespace Content.Server.Storage.EntitySystems
             SubscribeLocalEvent<SpawnItemsOnUseComponent, PriceCalculationEvent>(CalculatePrice, before: new[] { typeof(PricingSystem) });
         }
 
-        private void CalculatePrice(EntityUid uid, SpawnItemsOnUseComponent component, ref PriceCalculationEvent args)
+        private void CalculatePrice(Entity<SpawnItemsOnUseComponent> entity, ref PriceCalculationEvent args)
         {
-            var ungrouped = CollectOrGroups(component.Items, out var orGroups);
+            var ungrouped = CollectOrGroups(entity.Comp.Items, out var orGroups);
 
             foreach (var entry in ungrouped)
             {
@@ -61,39 +63,39 @@ namespace Content.Server.Storage.EntitySystems
             args.Handled = true;
         }
 
-        private void OnUseInHand(EntityUid uid, SpawnItemsOnUseComponent component, UseInHandEvent args)
+        private void OnUseInHand(Entity<SpawnItemsOnUseComponent> entity, ref UseInHandEvent args)
         {
             if (args.Handled)
                 return;
 
-            // If starting with zero or less uses, this component is a no-op
-            if (component.Uses <= 0)
+            // If starting with zero or fewer uses, this component is a no-op
+            if (entity.Comp.Uses <= 0)
                 return;
 
             var coords = Transform(args.User).Coordinates;
-            var spawnEntities = GetSpawns(component.Items, _random);
+            var spawnEntities = _entityTable.GetSpawns(entity.Comp.Table);
             EntityUid? entityToPlaceInHands = null;
 
             foreach (var proto in spawnEntities)
             {
                 entityToPlaceInHands = Spawn(proto, coords);
-                _adminLogger.Add(LogType.EntitySpawn, LogImpact.Low, $"{ToPrettyString(args.User)} used {ToPrettyString(uid)} which spawned {ToPrettyString(entityToPlaceInHands.Value)}");
+                _adminLogger.Add(LogType.EntitySpawn, LogImpact.Low, $"{ToPrettyString(args.User)} used {ToPrettyString(entity)} which spawned {ToPrettyString(entityToPlaceInHands.Value)}");
             }
 
-            if (component.Sound != null)
+            if (entity.Comp.Sound != null)
             {
                 // The entity is often deleted, so play the sound at its position rather than parenting
-                var coordinates = Transform(uid).Coordinates;
-                _audio.PlayPvs(component.Sound, coordinates);
+                var coordinates = Transform(entity).Coordinates;
+                _audio.PlayPvs(entity.Comp.Sound, coordinates);
             }
 
-            component.Uses--;
+            entity.Comp.Uses--;
 
             // Delete entity only if component was successfully used
-            if (component.Uses <= 0)
+            if (entity.Comp.Uses <= 0)
             {
                 args.Handled = true;
-                EntityManager.DeleteEntity(uid);
+                EntityManager.DeleteEntity(entity);
             }
 
             if (entityToPlaceInHands != null)

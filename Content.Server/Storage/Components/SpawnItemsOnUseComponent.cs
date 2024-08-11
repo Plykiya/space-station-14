@@ -1,3 +1,4 @@
+using Content.Shared.EntityTable.EntitySelectors;
 using Content.Shared.Storage;
 using Robust.Shared.Audio;
 
@@ -10,22 +11,28 @@ namespace Content.Server.Storage.Components
     public sealed partial class SpawnItemsOnUseComponent : Component
     {
         /// <summary>
-        ///     The list of entities to spawn, with amounts and orGroups.
+        /// Table that determines what gets spawned.
         /// </summary>
-        [DataField("items", required: true)]
-        public List<EntitySpawnEntry> Items = new();
+        [DataField(required: true)]
+        public EntityTableSelector Table = default!;
+
+        /// <summary>
+        /// Scatter of entity spawn coordinates to make selecting things a bit easier.
+        /// </summary>
+        [DataField]
+        public float Offset = 0.2f;
 
         /// <summary>
         ///     A sound to play when the items are spawned. For example, gift boxes being unwrapped.
         /// </summary>
-        [DataField("sound")]
-        public SoundSpecifier? Sound = null;
+        [DataField]
+        public SoundSpecifier? Sound;
 
         /// <summary>
         ///     How many uses before the item should delete itself.
         /// </summary>
         [ViewVariables(VVAccess.ReadWrite)]
-        [DataField("uses")]
+        [DataField]
         public int Uses = 1;
     }
 }
