@@ -386,7 +386,7 @@
     sprite: Clothing/OuterClothing/Coats/syndicate/coatsyndiecap.rsi
 
 - type: entity
-  parent: [ ClothingOuterCoatHoSTrench, BaseSyndicateContraband ]
+  parent: [BaseSyndicateContraband, ClothingOuterCoatHoSTrench]
   id: ClothingOuterCoatSyndieCapArmored
   name: syndicate's armored coat
   description: The syndicate's armored coat is made of durable fabric, with gilded patterns.
