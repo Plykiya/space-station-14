@@ -10,7 +10,7 @@
 - type: entity
   id: CrateCybersunJuggernautBundle
   suffix: Filled
-  parent: CrateSyndicate
+  parent: [ CrateSyndicate, BaseSyndicateContraband ]
   name: Cybersun juggernaut bundle
   description: Contains everything except a big gun to go postal.
   components:

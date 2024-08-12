@@ -282,7 +282,7 @@
 
 - type: entity
   id: BaseBorgChassisSyndicate
-  parent: BaseBorgChassis
+  parent: [ BaseBorgChassis, BaseSyndicateContraband ]
   abstract: true
   components:
   - type: NpcFactionMember

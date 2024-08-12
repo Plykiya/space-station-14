@@ -156,7 +156,7 @@
 
 #Space Ninja Helmet
 - type: entity
-  parent: ClothingHeadEVAHelmetBase
+  parent: [BaseSyndicateContraband, ClothingHeadEVAHelmetBase]
   id: ClothingHeadHelmetSpaceNinja
   name: space ninja helmet
   description: What may appear to be a simple black garment is in fact a highly sophisticated nano-weave helmet. Standard issue ninja gear.
@@ -358,7 +358,7 @@
     sprite: Clothing/Head/Helmets/ert_janitor.rsi
 
 - type: entity
-  parent: [ ClothingHeadHelmetBasic, BaseSyndicateContraband ]
+  parent: [ BaseSyndicateContraband, ClothingHeadHelmetBasic ]
   id: ClothingHeadHelmetRaid
   name: syndicate raid helmet
   description: An armored helmet for use with the syndicate raid suit. Very stylish.
