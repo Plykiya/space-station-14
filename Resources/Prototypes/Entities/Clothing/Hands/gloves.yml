@@ -428,6 +428,17 @@
     guides:
     - Forensics
 
+- type: entity
+  parent: ClothingHandsBase
+  id: GloveBoxThievingGloves
+  suffix: Thieving
+  components:
+  - type: Tag
+    tags: [ ] # ignore "WhitelistChameleon" tag
+  - type: Thieving
+    stripTimeReduction: 1.5
+    stealthy: true
+
 # TODO Make lubed items not slip in hands
 - type: entity
   parent: ClothingHandsBase

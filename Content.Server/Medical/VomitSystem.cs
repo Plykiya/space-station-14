@@ -2,7 +2,7 @@ using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
-using Content.Server.Forensics;
+using Content.Server.Forensics.Systems;
 using Content.Server.Popups;
 using Content.Server.Stunnable;
 using Content.Shared.Chemistry.Components;

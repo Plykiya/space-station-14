@@ -1,16 +1,20 @@
-namespace Content.Server.Forensics
+using Robust.Shared.GameStates;
+
+namespace Content.Shared.Forensics
 {
     /// <summary>
     /// This controls fibers left by gloves on items,
     /// which the forensics system uses.
     /// </summary>
-    [RegisterComponent]
+    [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
     public sealed partial class FiberComponent : Component
     {
         [DataField]
+        [AutoNetworkedField]
         public LocId FiberMaterial = "fibers-synthetic";
 
         [DataField]
+        [AutoNetworkedField]
         public string? FiberColor;
     }
 }
