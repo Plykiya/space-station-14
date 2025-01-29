@@ -94,5 +94,12 @@ namespace Content.Shared.Cargo.Prototypes
         /// </summary>
         [DataField]
         public string Group { get; private set; } = "market";
+
+        /// <summary>
+        /// Decides whether to add the required tracking components to the spawned product
+        /// when the product is ordered from a cargo order console
+        /// </summary>
+        [DataField]
+        public bool TrackOrderFromConsoles = true;
     }
 }

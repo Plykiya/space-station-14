@@ -70,6 +70,7 @@ public sealed class CargoGiftsRule : StationEventSystem<CargoGiftsRuleComponent>
                     qty,
                     Loc.GetString(component.Sender),
                     Loc.GetString(component.Description),
+                    false,
                     Loc.GetString(component.Dest),
                     cargoDb,
                     (station.Value, stationData)

@@ -1,0 +1,24 @@
+﻿<cartridges:CargoOrderTrackerUiFragment xmlns="https://spacestation14.io"
+                               xmlns:cartridges="clr-namespace:Content.Client.CartridgeLoader.Cartridges"
+                               xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+                               Orientation="Vertical"
+                               VerticalExpand="True">
+    <PanelContainer>
+        <PanelContainer.PanelOverride>
+            <gfx:StyleBoxFlat BackgroundColor="#000000FF"
+                              BorderColor="#5a5a5a"
+                              BorderThickness="0 0 0 1"/>
+        </PanelContainer.PanelOverride>
+        <BoxContainer Orientation="Horizontal" Margin="4 8">
+            <Label Align="Left" SetWidth="100" Margin="12 0 0 0" ClipText="True" Text="{Loc 'cargo-order-label-id-number'}"/>
+            <Label Align="Left" SetWidth="270" ClipText="True" Text="{Loc 'cargo-order-label-location'}"/>
+            <Label Align="Left" SetWidth="140" ClipText="True" Text="{Loc 'cargo-order-label-last-updated'}"/>
+        </BoxContainer>
+    </PanelContainer>
+    <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">
+        <ScrollContainer VerticalExpand="True" HScrollEnabled="True">
+            <BoxContainer Orientation="Vertical" Name="TrackedOrdersContainer"/>
+        </ScrollContainer>
+        <LineEdit Name="Input" HorizontalExpand="True" SetHeight="32"/>
+    </BoxContainer>
+</cartridges:CargoOrderTrackerUiFragment>

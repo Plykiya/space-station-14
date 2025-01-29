@@ -93,6 +93,12 @@
   name: device-frequency-prototype-name-lights
   frequency: 1173
 
+# Cargo crates broadcast their location to this frequency, the cargo server listens
+- type: deviceFrequency
+  id: CargoOrderTracking
+  name: device-frequency-prototype-name-cargo-order-tracking
+  frequency: 8976
+
 - type: deviceFrequency
   id: MailingUnit
   name: device-frequency-prototype-name-mailing-units
@@ -112,3 +118,4 @@
   id: BasicDevice
   name: device-frequency-prototype-name-basic-device
   frequency: 1280
+

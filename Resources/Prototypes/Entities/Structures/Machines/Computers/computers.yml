@@ -801,6 +801,14 @@
     - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
       state: generic_panel_open
   - type: CargoOrderConsole
+    trackingComponentsForProduct:
+    - type: CargoOrderTracker
+    - type: DeviceNetwork
+      deviceNetId: Wireless
+      transmitFrequencyId: CargoOrderTracking
+      savableAddress: false
+    - type: WirelessNetworkConnection
+      range: 500
   - type: BankClient
   - type: ActiveRadio
     channels:

@@ -24,6 +24,11 @@ astro-nav-program-name = AstroNav
 
 med-tek-program-name = MedTek
 
+cargo-order-tracker-program-name = Cargo order tracker
+cargo-order-label-id-number = Order #
+cargo-order-label-last-updated = Last updated ago
+cargo-order-label-location = Order location
+
 # Wanted list cartridge
 wanted-list-program-name = Wanted list
 wanted-list-label-no-records = It's all right, cowboy

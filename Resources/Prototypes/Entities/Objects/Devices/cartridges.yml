@@ -154,3 +154,21 @@
         sprite: Objects/Devices/gps.rsi
         state: icon
     - type: AstroNavCartridge
+
+- type: entity
+  parent: BaseItem
+  id: CargoOrderTrackerCartridge
+  name: cargo order tracker cartridge
+  description: A program for tracking your cargo orders.
+  components:
+  - type: Sprite
+    sprite: Objects/Devices/cartridge.rsi
+    state: cart-y
+  - type: UIFragment
+    ui: !type:CargoOrderTrackerUi
+  - type: Cartridge
+    programName: cargo-order-tracker-program-name
+    icon:
+      sprite: Structures/Storage/Crates/privatecrate_secure.rsi
+      state: icon
+  - type: CargoOrderTrackerCartridge

@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Content.Server.Cargo.Components;
+using Content.Server.DeviceNetwork.Components;
 using Content.Server.Labels.Components;
 using Content.Server.Station.Components;
 using Content.Shared.Cargo;
@@ -179,7 +180,7 @@ namespace Content.Server.Cargo.Systems
 
             if (!ev.Handled)
             {
-                ev.FulfillmentEntity = TryFulfillOrder((station.Value, stationData), order, orderDatabase);
+                ev.FulfillmentEntity = TryFulfillOrder((station.Value, stationData), order, orderDatabase, component);
 
                 if (ev.FulfillmentEntity == null)
                 {
@@ -217,7 +218,7 @@ namespace Content.Server.Cargo.Systems
             UpdateOrders(station.Value);
         }
 
-        private EntityUid? TryFulfillOrder(Entity<StationDataComponent> stationData, CargoOrderData order, StationCargoOrderDatabaseComponent orderDatabase)
+        private EntityUid? TryFulfillOrder(Entity<StationDataComponent> stationData, CargoOrderData order, StationCargoOrderDatabaseComponent orderDatabase, CargoOrderConsoleComponent? cargoOrderConsole = null)
         {
             // No slots at the trade station
             _listEnts.Clear();
@@ -237,7 +238,7 @@ namespace Content.Server.Cargo.Systems
                     {
                         var coordinates = new EntityCoordinates(trade, pad.Transform.LocalPosition);
 
-                        if (FulfillOrder(order, coordinates, orderDatabase.PrinterOutput))
+                        if (FulfillOrder(order, coordinates, orderDatabase.PrinterOutput, cargoOrderConsole))
                         {
                             tradeDestination = trade;
                             order.NumDispatched++;
@@ -358,7 +359,7 @@ namespace Content.Server.Cargo.Systems
 
         private static CargoOrderData GetOrderData(CargoConsoleAddOrderMessage args, CargoProductPrototype cargoProduct, int id)
         {
-            return new CargoOrderData(id, cargoProduct.Product, cargoProduct.Name, cargoProduct.Cost, args.Amount, args.Requester, args.Reason);
+            return new CargoOrderData(id, cargoProduct.Product, cargoProduct.Name, cargoProduct.Cost, args.Amount, args.Requester, args.Reason, cargoProduct.TrackOrderFromConsoles);
         }
 
         public static int GetOutstandingOrderCount(StationCargoOrderDatabaseComponent component)
@@ -412,6 +413,7 @@ namespace Content.Server.Cargo.Systems
             int qty,
             string sender,
             string description,
+            bool trackOrderFromConsoles,
             string dest,
             StationCargoOrderDatabaseComponent component,
             Entity<StationDataComponent> stationData
@@ -420,7 +422,7 @@ namespace Content.Server.Cargo.Systems
             DebugTools.Assert(_protoMan.HasIndex<EntityPrototype>(spawnId));
             // Make an order
             var id = GenerateOrderId(component);
-            var order = new CargoOrderData(id, spawnId, name, cost, qty, sender, description);
+            var order = new CargoOrderData(id, spawnId, name, cost, qty, sender, description, trackOrderFromConsoles);
 
             // Approve it now
             order.SetApproverData(dest, sender);
@@ -500,10 +502,17 @@ namespace Content.Server.Cargo.Systems
         /// <summary>
         /// Fulfills the specified cargo order and spawns paper attached to it.
         /// </summary>
-        private bool FulfillOrder(CargoOrderData order, EntityCoordinates spawn, string? paperProto)
+        private bool FulfillOrder(CargoOrderData order, EntityCoordinates spawn, string? paperProto, CargoOrderConsoleComponent? cargoOrderConsole = null)
         {
             // Create the item itself
             var item = Spawn(order.ProductId, spawn);
+
+            // the CargoOrderConsole contains the required ComponentRegistry to get the order to
+            // communicate with the CargoOrderTrackingServer
+            if (cargoOrderConsole != null && order.TrackOrderFromConsoles)
+            {
+                EntityManager.AddComponents(item, cargoOrderConsole.TrackingComponentsForProduct);
+            }
 
             // Ensure the item doesn't start anchored
             _transformSystem.Unanchor(item, Transform(item));

@@ -514,6 +514,14 @@
     borderColor: "#7C5D00"
   - type: Icon
     state: pda-captain
+  - type: CartridgeLoader
+    preinstalled:
+    - CrewManifestCartridge
+    - NotekeeperCartridge
+    - NewsReaderCartridge
+    - WantedListCartridge
+    - CargoOrderTrackerCartridge
+    - LogProbeCartridge
 
 - type: entity
   parent: BasePDA

@@ -583,6 +583,14 @@
           tags:
           - Write
   - type: CargoOrderConsole
+    trackingComponentsForProduct:
+    - type: CargoOrderTracker
+    - type: DeviceNetwork
+      deviceNetId: Wireless
+      transmitFrequencyId: CargoOrderTracking
+      savableAddress: false
+    - type: WirelessNetworkConnection
+      range: 500
   - type: BankClient
   - type: ActivatableUI
     verbText: qm-clipboard-computer-verb-text

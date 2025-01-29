@@ -49,10 +49,18 @@ namespace Content.Shared.Cargo
         [DataField]
         public string Reason { get; private set; }
         public  bool Approved;
+
         [DataField]
         public string? Approver;
 
-        public CargoOrderData(int orderId, string productId, string productName, int price, int amount, string requester, string reason)
+        /// <summary>
+        /// When set to true, will have tracking information if this order was ordered
+        /// from a cargo request console
+        /// </summary>
+        [DataField]
+        public bool TrackOrderFromConsoles = false;
+
+        public CargoOrderData(int orderId, string productId, string productName, int price, int amount, string requester, string reason, bool trackOrderFromConsoles)
         {
             OrderId = orderId;
             ProductId = productId;
@@ -61,6 +69,7 @@ namespace Content.Shared.Cargo
             OrderQuantity = amount;
             Requester = requester;
             Reason = reason;
+            TrackOrderFromConsoles = trackOrderFromConsoles;
         }
 
         public void SetApproverData(string? approver)
