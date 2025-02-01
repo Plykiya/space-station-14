@@ -5,7 +5,7 @@ namespace Content.Shared.CartridgeLoader.Cartridges;
 [Serializable, NetSerializable]
 public sealed class CargoOrderTrackerUiState : BoundUserInterfaceState
 {
-    public Dictionary<string, CargoOrderTrackerData> CargoOrders = new();
+    public Dictionary<int, CargoOrderTrackerData> CargoOrders = new();
 }
 
 [Serializable]

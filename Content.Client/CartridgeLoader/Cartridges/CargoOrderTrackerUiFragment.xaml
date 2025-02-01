@@ -19,6 +19,6 @@
         <ScrollContainer VerticalExpand="True" HScrollEnabled="True">
             <BoxContainer Orientation="Vertical" Name="TrackedOrdersContainer"/>
         </ScrollContainer>
-        <LineEdit Name="Input" HorizontalExpand="True" SetHeight="32"/>
+        <LineEdit Name="Input" HorizontalExpand="True" SetHeight="32" PlaceHolder="{Loc cargo-order-tracker-input-placeholder}"/>
     </BoxContainer>
 </cartridges:CargoOrderTrackerUiFragment>

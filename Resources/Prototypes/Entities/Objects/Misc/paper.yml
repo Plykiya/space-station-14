@@ -237,6 +237,12 @@
     - Cargo
 
 - type: entity
+  id: PaperCargoOrderReceipt
+  parent: PaperCargoInvoice
+  name: order receipt
+  description: A paper label that contains tracking information for an order. Putting the order number into your CargoTracking app will show you where the order is located.
+
+- type: entity
   name: character sheet
   parent: Paper
   id: PaperCNCSheet # legally gray zone of using "D&D" and "DND"

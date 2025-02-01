@@ -158,7 +158,7 @@
 - type: entity
   parent: BaseItem
   id: CargoOrderTrackerCartridge
-  name: cargo order tracker cartridge
+  name: CargoTracker cartridge
   description: A program for tracking your cargo orders.
   components:
   - type: Sprite

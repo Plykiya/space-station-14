@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Content.Server.Cargo.Components;
-using Content.Server.DeviceNetwork.Components;
 using Content.Server.Labels.Components;
 using Content.Server.Station.Components;
 using Content.Shared.Cargo;
@@ -63,6 +62,7 @@ namespace Content.Server.Cargo.Systems
             _audio.PlayPvs(component.ConfirmSound, uid);
             UpdateBankAccount(stationUid.Value, bank, (int) price);
             QueueDel(args.Used);
+            args.Handled = true;
         }
 
         private void OnInit(EntityUid uid, CargoOrderConsoleComponent orderConsole, ComponentInit args)
@@ -106,6 +106,9 @@ namespace Content.Server.Cargo.Systems
 
         private void OnApproveOrderMessage(EntityUid uid, CargoOrderConsoleComponent component, CargoConsoleApproveOrderMessage args)
         {
+            if (_timing.CurTime < component.NextPrintTime)
+                return;
+
             if (args.Actor is not { Valid: true } player)
                 return;
 
@@ -205,6 +208,12 @@ namespace Content.Server.Cargo.Systems
                     ("approver", order.Approver ?? string.Empty),
                     ("cost", cost));
                 _radio.SendRadioMessage(uid, message, component.AnnouncementChannel, uid, escapeMarkup: false);
+
+                var receipt = Spawn(component.ReceiptLabelId, Transform(uid).Coordinates);
+                component.NextPrintTime = _timing.CurTime + component.PrintDelay;
+                if (TryComp<PaperComponent>(receipt, out var receiptPaperComp))
+                    SetUpReceiptLabel((receipt, receiptPaperComp), order, cost);
+                _audio.PlayPvs(component.PrintSound, uid);
             }
 
             ConsolePopup(args.Actor, Loc.GetString("cargo-console-trade-station", ("destination", MetaData(ev.FulfillmentEntity.Value).EntityName)));
@@ -558,5 +567,37 @@ namespace Content.Server.Cargo.Systems
         }
 
         #endregion
+
+        private void SetUpReceiptLabel(Entity<PaperComponent> entity, CargoOrderData cargoOrderData, int cost)
+        {
+            var msg = new FormattedMessage();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-header", ("id", entity.Owner.Id)));
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-product",
+                ("productName", Loc.GetString(cargoOrderData.ProductName)),
+                ("orderAmount", cargoOrderData.OrderQuantity)));
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-cost",
+                ("cost", cost)));
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-approver",
+                ("approver", cargoOrderData.Approver ?? string.Empty)));
+            msg.PushNewline();
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-app-instructions-header"));
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-app-instructions-one"));
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-app-instructions-two"));
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-app-instructions-three"));
+            msg.PushNewline();
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-warning-header"));
+            msg.PushNewline();
+            msg.AddText(Loc.GetString("cargo-console-order-receipt-warning"));
+
+            _paperSystem.SetContent(entity, msg.ToMarkup());
+        }
     }
 }

@@ -8,12 +8,19 @@ namespace Content.Client.CartridgeLoader.Cartridges;
 [GenerateTypedNameReferences]
 public sealed partial class CargoOrderTrackerUiFragment : BoxContainer
 {
+    public event Action<int>? OnOrderAdded;
+    public event Action<int>? OnOrderRemoved;
     public CargoOrderTrackerUiFragment()
     {
         RobustXamlLoader.Load(this);
+
+        Input.OnTextEntered += _ =>
+        {
+            Input.Clear();
+        };
     }
 
-    public void UpdateState(Dictionary<string, CargoOrderTrackerData> cargoOrders)
+    public void UpdateState(Dictionary<int, CargoOrderTrackerData> cargoOrders)
     {
         TrackedOrdersContainer.RemoveAllChildren();
     }
